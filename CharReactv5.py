@@ -19,18 +19,32 @@ clock = pygame.time.Clock()
 is_running = True
 
 char = char_class.Character("Tail")
-char_img = char.Draw_Char() 
-char_rect = char_img.get_rect()
+char_img = char.Draw_Char()
+#print(char_img.get_width(), char_img.get_height())
+char_zone_width =  (game_setings.screen_width//4)*3
+#print(char_zone_width)
+if char_zone_width < char_img.get_width():
+	scale_coef = char_img.get_width()/(char_zone_width)
+else:
+	scale_coef = 1.0
+#print(scale_coef)
+new_heigth = char_img.get_height()/scale_coef
+char_rect =  pygame.Rect(0,0, char_zone_width,	int(new_heigth))
+#print(char_rect.width, new_heigth, char_rect.height)
+	#char_img.get_rect()
+char_img = pygame.transform.scale(char_img, (char_rect.width, char_rect.height))
 
-surf1 = pygame.Surface((char_img.get_width(), char_img.get_height()))
-surf1.fill((200, 200, 200))
+bg =pygame.image.load("img/bg/crbg.png")
+bg = pygame.transform.scale(bg, (char_rect.width, char_rect.height))
+#bg = pygame.Surface((char_rect.width, char_rect.height))
+#bg.fill((200, 200, 200))
 
 
 char_rect.centery = window_surface.get_rect().centery
 char_rect.x = window_surface.get_rect().x
 
 #gui
-gui_rect =  pygame.Rect( (game_setings.screen_width//4)*3 ,0, 
+gui_rect =  pygame.Rect( char_zone_width ,0, 
 	(game_setings.screen_width//4),game_setings.screen_height )
 
 panel_options = pygame_gui.elements.UIPanel(gui_rect,
@@ -69,12 +83,17 @@ while is_running:
 			if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
 				if event.ui_element == button_randomize:
 					print("randomize click")
-					
+					if char.apearence.tail == char_class.AP_TAIL_FOXTAIL:
+						char.apearence.tail = char_class.AP_TAIL_CATTAIL
+					elif char.apearence.tail == char_class.AP_TAIL_CATTAIL:
+						char.apearence.tail= char_class.AP_TAIL_FOXTAIL
+					char_img = char.Draw_Char()
+					char_img = pygame.transform.scale(char_img, (char_rect.width, char_rect.height))
 				if event.ui_element == button_exit:
 					is_running = False
 		manager.process_events(event)
 		
-	window_surface.blit(surf1, char_rect)
+	window_surface.blit(bg, char_rect)
 	window_surface.blit(char_img, char_rect)
 	manager.update(time_delta)
 	manager.draw_ui(window_surface)
