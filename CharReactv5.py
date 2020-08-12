@@ -75,8 +75,22 @@ class Char_Img_Redact_App():
 			text = 'Randomize',
 			container = self.panel_options_appear,
 			manager = self.manager)
+		self.tail_dropdown = pygame_gui.elements.UIDropDownMenu([tail[0] for tail in char_class.AP_TAILS],
+			self.char.apearence.tail[0],
+			pygame.Rect((20, 80), (100, 40) ),
+			manager = self.manager,
+			container = self.panel_options_appear)
+		self.button_tail_color_pick = pygame_gui.elements.UIButton(
+			relative_rect =	pygame.Rect((140, 80),(100, 40)),
+			text = 'TailColorPick',
+			container = self.panel_options_appear,
+			manager = self.manager)
+			
+		self.colour_picker = None
+		self.colour_type = char_class.COLOR_TYPE_NONE
 
 	def screen_update(self, time_delta):
+		self.window_surface.fill((134, 135, 138))
 		self.window_surface.blit(self.bg, self.char_rect)
 		self.window_surface.blit(self.char_img, self.char_rect)
 		self.manager.update(time_delta)
@@ -101,6 +115,32 @@ class Char_Img_Redact_App():
 				
 				if event.ui_element == self.button_exit:
 					self.is_running = False
+					
+				if event.ui_element == self.button_tail_color_pick:
+					self.colour_picker = pygame_gui.windows.UIColourPickerDialog(pygame.Rect(160, 50, 420, 400),
+																self.manager,
+																window_title='Change Colour',
+																initial_colour= pygame.Color(255, 255, 255))
+					self.button_tail_color_pick.disable()
+					self.colour_type = char_class.COLOR_TYPE_TAIL1
+					
+			if event.user_type == pygame_gui.UI_DROP_DOWN_MENU_CHANGED:
+				if event.ui_element == self.tail_dropdown:
+					for tail in char_class.AP_TAILS:
+						if tail[0] == self.tail_dropdown.selected_option:
+							self.char.apearence.tail = tail
+							self.char.apearence.reload_img_in_list(self.char_img_list, char_class.LAYER_TAIL)
+							self.char_img = char_class.img_merge(self.char_img_list)
+							break
+			
+			if event.user_type == pygame_gui.UI_COLOUR_PICKER_COLOUR_PICKED:
+				if 	self.colour_type == char_class.COLOR_TYPE_TAIL1:
+					self.char.apearence.tail_color1 = event.colour
+					self.char.apearence.reload_img_in_list(self.char_img_list, char_class.LAYER_TAIL)
+					self.char_img = char_class.img_merge(self.char_img_list)	
+			if event.user_type == pygame_gui.UI_WINDOW_CLOSE and    event.ui_element == self.colour_picker:
+				self.button_tail_color_pick.enable()
+				
 					
 		self.manager.process_events(event)
 		
