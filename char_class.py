@@ -1,5 +1,26 @@
 import pygame
 
+CHAR_IMG_WIDTH = 2400
+CHAR_IMG_HEIGHTT = 1300
+
+LAYER_TAIL = 0
+LAYER_WINGS = 1
+LAYER_HAIRBACK = 2
+LAYER_HAIRRIGHTTAIL = 3
+LAYER_HEADTORSO = 4
+LAYER_LEGS = 5
+LAYER_RIGHTARM = 6
+LAYER_HAIRMIDDLE = 7
+LAYER_HAIRLEFTTAIL = 8
+LAYER_LEFTARM = 9
+LAYER_BOOBS = 10
+LAYER_EERS = 11
+LAYER_EYESPUPILS = 12
+LAYER_EYES = 13
+LAYER_MIMIC = 14
+LAYER_HAIRFRONT = 15
+LAYER_HORNS = 16
+
 AP_TAIL_FOXTAIL = ('FoxTail2', pygame.Color(255, 103, 11), pygame.Color(255, 255, 255))
 AP_TAIL_CATTAIL = ('CatTail', pygame.Color(110, 164, 214))
 AP_WINGS_BATWINGS = ('BatWings2', 0, 0)
@@ -19,8 +40,14 @@ AP_MIMIC_NORMAL = ('NormalMimic1', 0, 0)
 AP_HAIRFRONT_CARE = ('CareHairFront', pygame.Color(241, 235, 189), 0)
 AP_HORNS_1 = ('Horns1', 0, 0)
 
+def img_merge(img_list):
+	merged_img = img_list[0]
+	for img in img_list[1:]:
+		merged_img.blit(img, (0,0))
+	return merged_img
+	
 def change_img_color (img, old_color, new_color):
-    if (old_color == 0) or (old_color == 0):
+    if (old_color == 0) or (new_color == 0):
         return img
     else:
         for x in range(img.get_width()):
@@ -50,7 +77,7 @@ def load_leyer( img_path, img, new_color=[]):
         img_surf = pygame.image.load(img_path + img[0]+".png")
     except pygame.error:
         print ('img download fail '+ img_path + img[0])
-    '''
+    
     if (len(img) == 3):
         if len(new_color) == 2:
             #if (type(img[1]) ==  type(pygame.Color())) and (type(img[2]) ==  type(pygame.Color()))     and (type(new_color[0]) ==  type(pygame.Color())) and (type(new_color[1]) ==  type(pygame.Color())) :
@@ -66,7 +93,7 @@ def load_leyer( img_path, img, new_color=[]):
         if len(new_color) >= 1:
             #if (type(img[1]) ==  type(pygame.Color()))  and (type(new_color[0]) ==  type(pygame.Color())):
                     img_surf = change_img_color(img_surf, img[1], new_color[0])
-   '''
+   
     return img_surf
                             
     
@@ -362,7 +389,7 @@ class Character_Appearance():
         self.skin_color2 = 0 #pygame.Color(255, 255, 255)
         self.tail_color1 = 0 #pygame.Color(101, 224, 124)
         self.tail_color2 = 0 #pygame.Color(189, 165, 212)
-        self.wings_color1 =  0 #pygame.Color(255, 255, 255)
+        self.wings_color1 = 0 #pygame.Color(255, 255, 255)
         self.wings_color2 = 0 #pygame.Color(242, 165, 228)
         #other
         self.body_type = 1
@@ -469,11 +496,220 @@ class Character_Appearance():
             src_img = load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2))
             merge_img.blit(src_img, (0,0))
             
-                
         return merge_img
         
-    #def load_all_body_img(self, img_list):
-         
+    def load_all_body_img(self, img_list):
+		        
+        if self.tail[0]:
+            img_list.append( load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2)))
+                
+        if self.wings[0]:
+            img_list.append( load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2)))
+                
+        if self.hair_back[0]:
+            img_list.append( load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2)))
+
+        if self.hair_right_tails[0]:
+            img_list.append(  load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2)))
+            
+        if self.head_torso[0]:
+            img_list.append(  load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2)))
+                    
+        if self.legs[0]:
+            img_list.append(  load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2)))
+                         
+        if self.right_arm[0]:
+            img_list.append(  load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2)))
+           
+        if self.hair_middle[0]:
+            img_list.append(  load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2)))
+                            
+        if self.hair_left_tails[0]:
+            img_list.append(  load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2)))
+                            
+        if self.left_arm[0]:
+            img_list.append( load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2)))
+            
+        if self.boobs[0]:
+            img_list.append( load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2)))
+                            
+        if self.ears[0]:
+            img_list.append( load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2)))
+                        
+        if self.eyes_pupils[0]: 
+            img_list.append( load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2)))
+            
+        if self.eyes[0]:
+            img_list.append( load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2)))
+                            
+        if self.mimic[0]:
+            img_list.append(  load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2)))
+             
+        if self.hair_front[0]:
+             img_list.append(  load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2)))
+                                            
+        if self.horns[0]:
+            img_list.append( load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2)))
+               
+        return img_list
+        
+    def load_all_body_img_resized(self, img_list, resolution): 
+        if self.tail[0]:
+            img = load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                
+        if self.wings[0]:
+            img = load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                
+        if self.hair_back[0]:
+            img = load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+
+        if self.hair_right_tails[0]:
+            img = load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+            
+        if self.head_torso[0]:
+            img = load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                    
+        if self.legs[0]:
+            img = load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                         
+        if self.right_arm[0]:
+            img = load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+           
+        if self.hair_middle[0]:
+            img = load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                            
+        if self.hair_left_tails[0]:
+            img = load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                            
+        if self.left_arm[0]:
+            img = load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+            
+        if self.boobs[0]:
+            img = load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                            
+        if self.ears[0]:
+            img = load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                        
+        if self.eyes_pupils[0]: 
+            img = load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+            
+        if self.eyes[0]:
+            img = load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                            
+        if self.mimic[0]:
+            img = load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+             
+        if self.hair_front[0]:
+            img = load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+                                            
+        if self.horns[0]:
+            img = load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2))
+            img_list.append(pygame.transform.scale(img, resolution))
+               
+        return img_list
+    
+    def reload_img_in_list(self, img_list, layer):
+        if (layer == 0) and (len(img_list)>0):
+            if self.tail[0]:
+                img = load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+                
+        if (layer == 1) and (len(img_list)>1):        
+            if self.wings[0]:
+                img = load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+
+        if (layer == 2) and (len(img_list)>2):         
+            if self.hair_back[0]:
+                img = load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+                
+        if (layer == 3) and (len(img_list)>3): 
+            if self.hair_right_tails[0]:
+                img = load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+            
+        if (layer == 4) and (len(img_list)>4):     
+            if self.head_torso[0]:
+                img = load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+            
+        if (layer == 5) and (len(img_list)>5):             
+            if self.legs[0]:
+                img = load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+            
+        if (layer == 6) and (len(img_list)>6):                  
+            if self.right_arm[0]:
+                img = load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+            
+        if (layer == 7) and (len(img_list)>7):    
+            if self.hair_middle[0]:
+                img = load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+           
+        if (layer == 8) and (len(img_list)>8):                     
+            if self.hair_left_tails[0]:
+                img = load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+           
+        if (layer == 9) and (len(img_list)>9):                     
+            if self.left_arm[0]:
+                img = load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+            
+        if (layer == 10) and (len(img_list)>10):     
+            if self.boobs[0]:
+                img = load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+          
+        if (layer == 11) and (len(img_list)>11):                     
+            if self.ears[0]:
+                img = load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+          
+        if (layer == 12) and (len(img_list)>12):                 
+            if self.eyes_pupils[0]: 
+                img = load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+
+        if (layer == 13) and (len(img_list)>13):     
+            if self.eyes[0]:
+                img = load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+          
+        if (layer == 14) and (len(img_list)>14):                     
+            if self.mimic[0]:
+                img = load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+           
+        if (layer == 15) and (len(img_list)>15):      
+            if self.hair_front[0]:
+                img = load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+
+        if (layer == 16) and (len(img_list)>16):                                     
+            if self.horns[0]:
+                img = load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2))
+                img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
+           
             
 class Character():
     def __init__(self, name):
@@ -646,9 +882,6 @@ class Character():
                 self.char_stats.stats.resist_dmg.fire += 5
                 #APEARENCE
                 
-    def Draw_Char(self):
-        return self.apearence.draw_char()               
-
         
 class Dmg_Skill():
     def __init__():
