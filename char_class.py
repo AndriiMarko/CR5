@@ -35,7 +35,7 @@ COLOR_TYPE_WINGS1 = 10
 COLOR_TYPE_WINGS2 = 11
         
 
-AP_TAIL_NONE = ('', 0, 0)
+AP_TAIL_NONE = ('none', 0)
 AP_TAIL_FOXTAIL = ('FoxTail2', pygame.Color(255, 103, 11), pygame.Color(255, 255, 255))
 AP_TAIL_CATTAIL = ('CatTail', pygame.Color(110, 164, 214))
 AP_TAILS = (AP_TAIL_NONE, AP_TAIL_FOXTAIL, AP_TAIL_CATTAIL)
@@ -100,6 +100,8 @@ def load_leyer( img_path, img, new_color=[]):
             #if (type(img[1]) ==  type(pygame.Color())) and (type(img[2]) ==  type(pygame.Color()))     and (type(new_color[0]) ==  type(pygame.Color())) and (type(new_color[1]) ==  type(pygame.Color())) :
             if (img[2] == 0) or (new_color[1] == 0):
                 img_surf = change_img_color(img_surf, img[1], new_color[0])
+            elif (img[1] == 0) or (new_color[0] == 0):
+                img_surf = change_img_color(img_surf, img[2], new_color[1])
             else:
                 img_surf = change_img_color2(img_surf, img[1:], new_color)
         elif len(new_color) == 1:
