@@ -4,22 +4,23 @@ CHAR_IMG_WIDTH = 2400
 CHAR_IMG_HEIGHTT = 1300
 
 LAYER_TAIL = 0
-LAYER_WINGS = 1
-LAYER_HAIRBACK = 2
-LAYER_HAIRRIGHTTAIL = 3
-LAYER_HEADTORSO = 4
-LAYER_LEGS = 5
+LAYER_HAIRBACK = 1
+LAYER_HAIRRIGHTTAIL = 2
+LAYER_LEGS = 3
+LAYER_WINGS = 4
+LAYER_HEADTORSO = 5
 LAYER_RIGHTARM = 6
 LAYER_HAIRMIDDLE = 7
 LAYER_HAIRLEFTTAIL = 8
 LAYER_LEFTARM = 9
 LAYER_BOOBS = 10
-LAYER_EERS = 11
+LAYER_EARS = 11
 LAYER_EYESPUPILS = 12
 LAYER_EYES = 13
 LAYER_MIMIC = 14
 LAYER_HAIRFRONT = 15
 LAYER_HORNS = 16
+LAYERS_BODY_NUM = 17
 
 COLOR_TYPE_NONE = 0
 COLOR_TYPE_HORN = 1
@@ -41,13 +42,32 @@ AP_TAIL_CATTAIL = ('CatTail', pygame.Color(110, 164, 214))
 AP_TAILS = (AP_TAIL_NONE, AP_TAIL_FOXTAIL, AP_TAIL_CATTAIL)
 
 AP_WINGS_BATWINGS = ('BatWings2', 0, 0)
+
+AP_HAIRBACK_NONE = ('none', 0)
 AP_HAIRBACK_LONG = ('LongHairBack', pygame.Color(241, 235, 189), 0)
+AP_HAIRBACK_LONGSTRAIGHT = ('LongStraightHairBack', pygame.Color(241, 235, 189), 0)
+AP_HAIRBACKS = (AP_HAIRBACK_NONE, AP_HAIRBACK_LONG, AP_HAIRBACK_LONGSTRAIGHT)
+
+AP_HAIRRIGHTTAIL_NONE = ('none', 0)
 AP_HAIRRIGHTTAIL_LONGTAIL =  ('LongTailRightHairTail', pygame.Color(241, 235, 189), 0)
+AP_HAIRRIGHTTAIL_SHORTTAIL =  ('ShortTailRightHairTail', pygame.Color(241, 235, 189), 0)
+AP_HAIRRIGHTTAILS = (AP_HAIRRIGHTTAIL_NONE, AP_HAIRRIGHTTAIL_LONGTAIL, AP_HAIRRIGHTTAIL_SHORTTAIL)
+
 AP_HEADTORSO_HUMAN = ('HumanBody', 0, 0)
 AP_LEGS_HUMAN = ('HumanLegs2', 0, 0)
 AP_RIGHTARM_HUMAN = ('HumanRightArm2', 0, 0)
+
+AP_HAIRMIDDLE_NONE = ('none', 0)
 AP_HAIRMIDDLE_CARE = ('CareHairMiddle', pygame.Color(241, 235, 189), 0)
+AP_HAIRMIDDLE_LONGSTRAIGHT = ('LongStraightHairMiddle', pygame.Color(241, 235, 189), 0)
+AP_HAIRMIDDLE_LONG = ('LongHairMiddle', pygame.Color(241, 235, 189), 0)
+AP_HAIRMIDDLES = (AP_HAIRMIDDLE_NONE, AP_HAIRMIDDLE_CARE, AP_HAIRMIDDLE_LONGSTRAIGHT, AP_HAIRMIDDLE_LONG)
+
+AP_HAIRLEFTTAIL_NONE = ('none', 0)
 AP_HAIRLEFTTAIL_LONGTAIL =  ('LongTailHairLeftTail', pygame.Color(241, 235, 189), 0)
+AP_HAIRLEFTTAIL_SHORTTAIL =  ('ShortTailHairLeftTail', pygame.Color(241, 235, 189), 0)
+AP_HAIRLEFTTAILS = (AP_HAIRLEFTTAIL_NONE, AP_HAIRLEFTTAIL_LONGTAIL, AP_HAIRLEFTTAIL_SHORTTAIL)
+
 AP_LEFTARM_HUMAN = ('HumanLeftArm2', 0, 0)
 AP_BOOBS_2 = ('2Boobs2', 0, 0)
 AP_EERS_HUMAN = ('HumanEars2', 0, 0)
@@ -58,11 +78,16 @@ AP_HAIRFRONT_CARE = ('CareHairFront', pygame.Color(241, 235, 189), 0)
 AP_HORNS_1 = ('Horns1', 0, 0)
 
 def img_merge(img_list):
-	merged_img = img_list[0]
-	for img in img_list[1:]:
-		merged_img.blit(img, (0,0))
-	return merged_img
-	
+    merged_img = img_list[0].copy()
+    #merged_img = pygame.Surface((img_list[0].get_width(), img_list[0].get_height()))
+    #merged_img.fill((255, 255, 255))
+    #merged_img.set_colorkey((255, 255, 255))
+    #merged_img = img_list[0]
+    #for img in img_list[1:]:
+    for img in img_list[1:]:
+        merged_img.blit(img, (0,0))
+    return merged_img
+    
 def change_img_color (img, old_color, new_color):
     if (old_color == 0) or (new_color == 0):
         return img
@@ -446,285 +471,340 @@ class Character_Appearance():
         merge_img = pygame.Surface((2400, 1300))
         merge_img.set_colorkey((0, 0, 0))
         
-        if self.tail[0]:
-            src_img = load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2))
-            merge_img.blit(src_img, (0,0))
+        for layer_number in range(0, LAYERS_BODY_NUM):
+            
+            if layer_number == LAYER_TAIL:
+                if self.tail[0]:
+                    src_img = load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_WINGS :        
+                if self.wings[0]:
+                    src_img = load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_HAIRBACK :     
+                if self.hair_back[0]:
+                    src_img = load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_HAIRRIGHTTAIL:
+                if self.hair_right_tails[0]:
+                    src_img = load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_HEADTORSO: 
+                if self.head_torso[0]:
+                    src_img = load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_LEGS:          
+                if self.legs[0]:
+                    src_img = load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_RIGHTARM:              
+                if self.right_arm[0]:
+                    src_img = load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2))
+                    merge_img.blit(src_img, (0,0))
                 
-        if self.wings[0]:
-            src_img = load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2))
-            merge_img.blit(src_img, (0,0))
-                
-        if self.hair_back[0]:
-            src_img = load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2))
-            merge_img.blit(src_img, (0,0))
-
-        if self.hair_right_tails[0]:
-            src_img = load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2))
-            merge_img.blit(src_img, (0,0))
+            if layer_number == LAYER_HAIRMIDDLE:    
+                if self.hair_middle[0]:
+                    src_img = load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2))
+                    merge_img.blit(src_img, (0,0))
             
-        if self.head_torso[0]:
-            src_img = load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2))
-            merge_img.blit(src_img, (0,0))
-                    
-        if self.legs[0]:
-            src_img = load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2))
-            merge_img.blit(src_img, (0,0))
-                        
-        if self.right_arm[0]:
-            src_img = load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2))
-            merge_img.blit(src_img, (0,0))
+            if layer_number == LAYER_HAIRLEFTTAIL:                  
+                if self.hair_left_tails[0]:
+                    src_img = load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2))
+                    merge_img.blit(src_img, (0,0))
             
+            if layer_number == LAYER_LEFTARM:                   
+                if self.left_arm[0]:
+                    src_img = load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2))
+                    merge_img.blit(src_img, (0,0))
             
-        if self.hair_middle[0]:
-            src_img = load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2))
-            merge_img.blit(src_img, (0,0))
-                            
-        if self.hair_left_tails[0]:
-            src_img = load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2))
-            merge_img.blit(src_img, (0,0))
-                            
-        if self.left_arm[0]:
-            src_img = load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2))
-            merge_img.blit(src_img, (0,0))
+            if layer_number == LAYER_BOOBS: 
+                if self.boobs[0]:
+                    src_img = load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2))
+                    merge_img.blit(src_img, (0,0))
             
-        if self.boobs[0]:
-            src_img = load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2))
-            merge_img.blit(src_img, (0,0))
-                            
-        if self.ears[0]:
-            src_img = load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2))
-            merge_img.blit(src_img, (0,0))
-                        
-        if self.eyes_pupils[0]: 
-            src_img = load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2))
-            merge_img.blit(src_img, (0,0))
+            if layer_number == LAYER_EARS:                  
+                if self.ears[0]:
+                    src_img = load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2))
+                    merge_img.blit(src_img, (0,0))
             
-        if self.eyes[0]:
-            src_img = load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2))
-            merge_img.blit(src_img, (0,0))
-                            
-        if self.mimic[0]:
-            src_img = load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2))
-            merge_img.blit(src_img, (0,0))
+            if layer_number == LAYER_EYESPUPILS:                
+                if self.eyes_pupils[0]: 
+                    src_img = load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2))
+                    merge_img.blit(src_img, (0,0))
             
-        if self.hair_front[0]:
-            src_img = load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2))
-            merge_img.blit(src_img, (0,0))
-                                            
-        if self.horns[0]:
-            src_img = load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2))
-            merge_img.blit(src_img, (0,0))
+            if layer_number == LAYER_EYES:  
+                if self.eyes[0]:
+                    src_img = load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_MIMIC:                 
+                if self.mimic[0]:
+                    src_img = load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_HAIRFRONT: 
+                if self.hair_front[0]:
+                    src_img = load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2))
+                    merge_img.blit(src_img, (0,0))
+            
+            if layer_number == LAYER_HORNS:                                 
+                if self.horns[0]:
+                    src_img = load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2))
+                    merge_img.blit(src_img, (0,0))
             
         return merge_img
         
     def load_all_body_img(self, img_list):
-		        
-        if self.tail[0]:
-            img_list.append( load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2)))
-                
-        if self.wings[0]:
-            img_list.append( load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2)))
-                
-        if self.hair_back[0]:
-            img_list.append( load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2)))
+        for layer_number in range(0, LAYERS_BODY_NUM):
+            
+            if layer_number == LAYER_TAIL:        
+                if self.tail[0]:
+                    img_list.append( load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2)))
+            
+            elif layer_number == LAYER_WINGS:         
+                if self.wings[0]:
+                    img_list.append( load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2)))
+            
+            elif layer_number == LAYER_HAIRBACK:          
+                if self.hair_back[0]:
+                    img_list.append( load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2)))
 
-        if self.hair_right_tails[0]:
-            img_list.append(  load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2)))
+            elif layer_number == LAYER_HAIRRIGHTTAIL:
+                if self.hair_right_tails[0]:
+                    img_list.append(  load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2)))
             
-        if self.head_torso[0]:
-            img_list.append(  load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2)))
-                    
-        if self.legs[0]:
-            img_list.append(  load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2)))
-                         
-        if self.right_arm[0]:
-            img_list.append(  load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2)))
-           
-        if self.hair_middle[0]:
-            img_list.append(  load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2)))
-                            
-        if self.hair_left_tails[0]:
-            img_list.append(  load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2)))
-                            
-        if self.left_arm[0]:
-            img_list.append( load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2)))
+            elif layer_number == LAYER_HEADTORSO:     
+                if self.head_torso[0]:
+                    img_list.append(  load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2)))
             
-        if self.boobs[0]:
-            img_list.append( load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2)))
-                            
-        if self.ears[0]:
-            img_list.append( load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2)))
-                        
-        if self.eyes_pupils[0]: 
-            img_list.append( load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2)))
+            elif layer_number == LAYER_LEGS:              
+                if self.legs[0]:
+                    img_list.append(  load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2)))
             
-        if self.eyes[0]:
-            img_list.append( load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2)))
-                            
-        if self.mimic[0]:
-            img_list.append(  load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2)))
-             
-        if self.hair_front[0]:
-             img_list.append(  load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2)))
-                                            
-        if self.horns[0]:
-            img_list.append( load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2)))
+            elif layer_number == LAYER_RIGHTARM:                   
+                if self.right_arm[0]:
+                    img_list.append(  load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2)))
+            
+            elif layer_number == LAYER_HAIRMIDDLE:       
+                if self.hair_middle[0]:
+                    img_list.append(  load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2)))
+            
+            elif layer_number == LAYER_HAIRLEFTTAIL:                      
+                if self.hair_left_tails[0]:
+                    img_list.append(  load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2)))
+            
+            elif layer_number == LAYER_LEFTARM:                       
+                if self.left_arm[0]:
+                    img_list.append( load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2)))
+            
+            elif layer_number == LAYER_BOOBS:     
+                if self.boobs[0]:
+                    img_list.append( load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2)))
+            
+            elif layer_number == LAYER_EARS:                      
+                if self.ears[0]:
+                    img_list.append( load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2)))
+            
+            elif layer_number == LAYER_EYESPUPILS:                    
+                if self.eyes_pupils[0]: 
+                    img_list.append( load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2)))
+            
+            elif layer_number == LAYER_EYES:      
+                if self.eyes[0]:
+                    img_list.append( load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2)))
+            
+            elif layer_number == LAYER_MIMIC:                     
+                if self.mimic[0]:
+                    img_list.append(  load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2)))
+            
+            elif layer_number == LAYER_HAIRFRONT:      
+                if self.hair_front[0]:
+                     img_list.append(  load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2)))
+            
+            elif layer_number == LAYER_HORNS:                                     
+                if self.horns[0]:
+                    img_list.append( load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2)))
                
         return img_list
         
     def load_all_body_img_resized(self, img_list, resolution): 
-        if self.tail[0]:
-            img = load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                
-        if self.wings[0]:
-            img = load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                
-        if self.hair_back[0]:
-            img = load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-
-        if self.hair_right_tails[0]:
-            img = load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
+        for layer_number in range(0, LAYERS_BODY_NUM):
             
-        if self.head_torso[0]:
-            img = load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                    
-        if self.legs[0]:
-            img = load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                         
-        if self.right_arm[0]:
-            img = load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-           
-        if self.hair_middle[0]:
-            img = load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                            
-        if self.hair_left_tails[0]:
-            img = load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                            
-        if self.left_arm[0]:
-            img = load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
+            if layer_number == LAYER_TAIL:
+                if self.tail[0]:
+                    img = load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
             
-        if self.boobs[0]:
-            img = load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                            
-        if self.ears[0]:
-            img = load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                        
-        if self.eyes_pupils[0]: 
-            img = load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
+            elif layer_number == LAYER_WINGS:         
+                if self.wings[0]:
+                    img = load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
             
-        if self.eyes[0]:
-            img = load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                            
-        if self.mimic[0]:
-            img = load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-             
-        if self.hair_front[0]:
-            img = load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
-                                            
-        if self.horns[0]:
-            img = load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2))
-            img_list.append(pygame.transform.scale(img, resolution))
+            elif layer_number == LAYER_HAIRBACK:          
+                if self.hair_back[0]:
+                    img = load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_HAIRRIGHTTAIL:
+                if self.hair_right_tails[0]:
+                    img = load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_HEADTORSO:     
+                if self.head_torso[0]:
+                    img = load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_LEGS:              
+                if self.legs[0]:
+                    img = load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_RIGHTARM:                   
+                if self.right_arm[0]:
+                    img = load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_HAIRMIDDLE:       
+                if self.hair_middle[0]:
+                    img = load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_HAIRLEFTTAIL:                      
+                if self.hair_left_tails[0]:
+                    img = load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_LEFTARM:                       
+                if self.left_arm[0]:
+                    img = load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_BOOBS:     
+                if self.boobs[0]:
+                    img = load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_EARS:                      
+                if self.ears[0]:
+                    img = load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_EYESPUPILS:                    
+                if self.eyes_pupils[0]: 
+                    img = load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_EYES:      
+                if self.eyes[0]:
+                    img = load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_MIMIC:                     
+                if self.mimic[0]:
+                    img = load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_HAIRFRONT:      
+                if self.hair_front[0]:
+                    img = load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
+            
+            elif layer_number == LAYER_HORNS:                                     
+                if self.horns[0]:
+                    img = load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2))
+                    img_list.append(pygame.transform.scale(img, resolution))
                
         return img_list
     
     def reload_img_in_list(self, img_list, layer):
-        if (layer == 0) and (len(img_list)>0):
+        if (layer == LAYER_TAIL) and (len(img_list)>LAYER_TAIL):
             if self.tail[0]:
                 img = load_leyer("img/char/Tails/", self.tail, (self.tail_color1, self.tail_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
                 
-        if (layer == 1) and (len(img_list)>1):        
+        if (layer == LAYER_WINGS) and (len(img_list)>LAYER_WINGS):        
             if self.wings[0]:
                 img = load_leyer("img/char/Wings/", self.wings, (self.wings_color1, self.wings_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
 
-        if (layer == 2) and (len(img_list)>2):         
+        if (layer == LAYER_HAIRBACK) and (len(img_list)>LAYER_HAIRBACK):         
             if self.hair_back[0]:
                 img = load_leyer("img/char/HairBack/", self.hair_back, (self.hair_color, self.hair_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
                 
-        if (layer == 3) and (len(img_list)>3): 
+        if (layer == LAYER_HAIRRIGHTTAIL) and (len(img_list)>LAYER_HAIRRIGHTTAIL): 
             if self.hair_right_tails[0]:
                 img = load_leyer("img/char/HairRightTails/", self.hair_right_tails, (self.hair_color, self.hair_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
             
-        if (layer == 4) and (len(img_list)>4):     
+        if (layer == LAYER_HEADTORSO) and (len(img_list)>LAYER_HEADTORSO):     
             if self.head_torso[0]:
                 img = load_leyer("img/char/HeadTorso/", self.head_torso, (self.skin_color, self.skin_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
             
-        if (layer == 5) and (len(img_list)>5):             
+        if (layer == LAYER_LEGS) and (len(img_list)>LAYER_LEGS):             
             if self.legs[0]:
                 img = load_leyer("img/char/Legs/", self.legs, (self.skin_color, self.skin_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
             
-        if (layer == 6) and (len(img_list)>6):                  
+        if (layer == LAYER_RIGHTARM) and (len(img_list)>LAYER_RIGHTARM):                  
             if self.right_arm[0]:
                 img = load_leyer("img/char/RightArm/", self.right_arm, (self.skin_color, self.skin_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
             
-        if (layer == 7) and (len(img_list)>7):    
+        if (layer == LAYER_HAIRMIDDLE) and (len(img_list)>LAYER_HAIRMIDDLE):    
             if self.hair_middle[0]:
                 img = load_leyer("img/char/HairMiddle/", self.hair_middle, (self.hair_color, self.hair_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
            
-        if (layer == 8) and (len(img_list)>8):                     
+        if (layer == LAYER_HAIRLEFTTAIL) and (len(img_list)>LAYER_HAIRLEFTTAIL):                     
             if self.hair_left_tails[0]:
                 img = load_leyer("img/char/HairLeftTails/", self.hair_left_tails, (self.hair_color, self.hair_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
            
-        if (layer == 9) and (len(img_list)>9):                     
+        if (layer == LAYER_LEFTARM) and (len(img_list)>LAYER_LEFTARM):                     
             if self.left_arm[0]:
                 img = load_leyer("img/char/LeftArm/", self.left_arm, (self.skin_color, self.skin_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
             
-        if (layer == 10) and (len(img_list)>10):     
+        if (layer == LAYER_BOOBS) and (len(img_list)>LAYER_BOOBS):     
             if self.boobs[0]:
                 img = load_leyer("img/char/Boobs/", self.boobs, (self.skin_color, self.skin_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
           
-        if (layer == 11) and (len(img_list)>11):                     
+        if (layer == LAYER_EARS) and (len(img_list)>LAYER_EARS):                     
             if self.ears[0]:
                 img = load_leyer("img/char/Ears/", self.ears, (self.skin_color, self.skin_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
           
-        if (layer == 12) and (len(img_list)>12):                 
+        if (layer == LAYER_EYESPUPILS) and (len(img_list)>LAYER_EYESPUPILS):                 
             if self.eyes_pupils[0]: 
                 img = load_leyer("img/char/EyesPupils/", self.eyes_pupils, (self.eye_color, self.eye_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
 
-        if (layer == 13) and (len(img_list)>13):     
+        if (layer == LAYER_EYES) and (len(img_list)>LAYER_EYES):     
             if self.eyes[0]:
                 img = load_leyer("img/char/Eyes/", self.eyes, (self.skin_color, self.skin_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
           
-        if (layer == 14) and (len(img_list)>14):                     
+        if (layer == LAYER_MIMIC) and (len(img_list)>LAYER_MIMIC):                     
             if self.mimic[0]:
                 img = load_leyer("img/char/Mimic/", self.mimic, (self.hair_color, self.hair_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
            
-        if (layer == 15) and (len(img_list)>15):      
+        if (layer == LAYER_HAIRFRONT) and (len(img_list)>LAYER_HAIRFRONT):      
             if self.hair_front[0]:
                 img = load_leyer("img/char/HairFront/", self.hair_front, (self.hair_color, self.hair_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
 
-        if (layer == 16) and (len(img_list)>16):                                     
+        if (layer == LAYER_HORNS) and (len(img_list)>LAYER_HORNS):                                     
             if self.horns[0]:
                 img = load_leyer("img/char/Horns/", self.horns, (self.hair_color, self.hair_color2))
                 img_list[layer] = pygame.transform.scale(img, (img_list[layer].get_width(), img_list[layer].get_height()))
