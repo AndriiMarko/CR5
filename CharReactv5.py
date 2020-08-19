@@ -149,7 +149,17 @@ class Char_Img_Redact_App():
 			pygame.Rect((row1, column2_height*3+column_height+5), (buton_width, column_height) ),
 			manager = self.manager,
 			container = self.panel_options_appear_hair)	
-			
+		
+		self.hairfront_label =  pygame_gui.elements.UILabel(relative_rect = pygame.Rect((row1, column2_height*4+5),(buton_width,column_height)),
+			text = 'Hair Front',
+			manager = self.manager,
+			container = self.panel_options_appear_hair)
+		self.hairfront_dropdown = pygame_gui.elements.UIDropDownMenu([hf[0] for hf in char_class.AP_HAIRFRONTS],
+			self.char.apearence.hair_front[0],
+			pygame.Rect((row1, column2_height*4+column_height+5), (buton_width, column_height) ),
+			manager = self.manager,
+			container = self.panel_options_appear_hair)	
+		
 		#Body Panel		
 		self.panel_options_appear = pygame_gui.elements.UIPanel(pygame.Rect(0,self.panel_options_main.relative_rect.height,
 			self.gui_rect.width, self.gui_rect.height- self.panel_options_main.relative_rect.height),
@@ -310,6 +320,13 @@ class Char_Img_Redact_App():
 						if hlt[0] == self.hairlefttails_dropdown.selected_option:
 							self.char.apearence.hair_left_tails = hlt
 							self.char.apearence.reload_img_in_list(self.char_img_list, char_class.LAYER_HAIRLEFTTAIL)
+							self.char_img = char_class.img_merge(self.char_img_list)
+							break
+				if event.ui_element == self.hairfront_dropdown:
+					for hf in char_class.AP_HAIRFRONTS:
+						if hf[0] == self.hairfront_dropdown.selected_option:
+							self.char.apearence.hair_front = hf
+							self.char.apearence.reload_img_in_list(self.char_img_list, char_class.LAYER_HAIRFRONT)
 							self.char_img = char_class.img_merge(self.char_img_list)
 							break
 			

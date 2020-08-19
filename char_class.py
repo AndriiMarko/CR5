@@ -74,7 +74,14 @@ AP_EERS_HUMAN = ('HumanEars2', 0, 0)
 AP_EYESPUPILS_1 = ('Pupils1', 0, 0)
 AP_EYES_1 = ('Eyes1', 0, 0)
 AP_MIMIC_NORMAL = ('NormalMimic1', 0, 0)
+
+AP_HAIRFRONT_NONE = ('none', 0)
 AP_HAIRFRONT_CARE = ('CareHairFront', pygame.Color(241, 235, 189), 0)
+AP_HAIRFRONT_WAWEIN = ('WawedInHairFront', pygame.Color(241, 235, 189), 0)
+AP_HAIRFRONT_WAWEOUT = ('WawedOutHairFront', pygame.Color(241, 235, 189), 0)
+AP_HAIRFRONT_CARE2 = ('Care2HairFront', pygame.Color(241, 235, 189), 0)
+AP_HAIRFRONTS = (AP_HAIRFRONT_NONE, AP_HAIRFRONT_CARE, AP_HAIRFRONT_CARE2, AP_HAIRFRONT_WAWEIN, AP_HAIRFRONT_WAWEOUT)
+
 AP_HORNS_1 = ('Horns1', 0, 0)
 
 def img_merge(img_list):
